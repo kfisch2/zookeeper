@@ -11,6 +11,17 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+// middleware to look for frontend files
+// middleware is a helper function that works between 
+// a res and req cycle
+
+// static method to make files static resources
+// 'public' file path location created that holds
+// the frontend files
+// this allows front-end code to be accessed without
+// having a specific server endpoint for each
+app.use(express.static('public'));
+
 // parse incoming string or data array
 app.use(express.urlencoded({ extended: true}));
 
@@ -122,8 +133,31 @@ function validateAnimal(animal) {
   return true;
 }
 
+// add index.html route to server.js
+// '/' brings us to the root route of the server
+// this GET route reponds with an HTML page to display in 
+// the browser
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'))
+})
+
+// route that serves animals.html
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'))
+})
+
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'))
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+})
+
+// listen method should always be last
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);
 });
+
 
 
